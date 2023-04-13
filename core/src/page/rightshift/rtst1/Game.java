@@ -1,9 +1,11 @@
 package page.rightshift.rtst1;
 
 import com.badlogic.gdx.ApplicationAdapter;
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.ScreenUtils;
@@ -15,7 +17,7 @@ public class Game extends ApplicationAdapter {
 	public static ShapeRenderer shapeRenderer;
 	public static OrthographicCamera cam;
 	public static Texture circleTex;
-	public static Texture backdrop;
+	public static Sprite backdrop;
 
 	public static LinkedList<Unit> toDraw;
 	public static LinkedList<UnitOrder> c_circles;
@@ -31,7 +33,7 @@ public class Game extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		cam = new OrthographicCamera();
 		circleTex = new Texture("circle.png");
-		backdrop = new Texture("bg.png");
+		backdrop = new Sprite(new Texture("bg.png"));
 
 		money = 32;
 		money_upgrades = 1;
@@ -41,15 +43,21 @@ public class Game extends ApplicationAdapter {
 		toDraw = new LinkedList<>();
 		c_circles = new LinkedList<>();
 		Unit.orders = new LinkedList<>();
+
+		cam = new OrthographicCamera(640, 480);
+		cam.translate(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
+		cam.update();
 	}
 
 	@Override
 	public void render () {
-		ScreenUtils.clear(0, 0, 0, 1);
+		ScreenUtils.clear(0.198f, 0.406f, 0.633f, 1);
 		c_circles = (LinkedList<UnitOrder>) Unit.orders.clone();
 
 		InputController.handleControls();
+		cam.update();
 
+		batch.setProjectionMatrix(cam.combined);
 		tick++;
 
 		if(Unit.orders.size() <= 1) {
@@ -58,8 +66,7 @@ public class Game extends ApplicationAdapter {
 
 		batch.begin();
 
-		batch.draw(backdrop, 0, 0);
-
+		backdrop.draw(batch);
 		LinkedList<Unit> c_toDraw = (LinkedList<Unit>) toDraw.clone();
 
 		for(Unit a: c_toDraw) {
