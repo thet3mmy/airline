@@ -11,6 +11,7 @@ public class Unit extends Actor {
     private Circle testCircle;
     public static LinkedList<UnitOrder> orders;
     public int currentOrder;
+    public int stopsLeft;
 
     @Override
     public void think() {
@@ -25,7 +26,16 @@ public class Unit extends Actor {
             }
         }
 
+        if(ticks % 240 == 0) {
+            stopsLeft--;
+        }
+
         try {
+            if(stopsLeft < 1) {
+                Game.toDraw.remove(this);
+                this.tex.dispose();
+            }
+
             if (orders.get(currentOrder) != null) {
                 UnitOrder order = orders.get(currentOrder);
                 if(order != null) {
@@ -47,6 +57,7 @@ public class Unit extends Actor {
                     if(testCircle.contains(new Vector2(sprite.getX(), sprite.getY()))) {
                         this.direction = new Vector2();
                         currentOrder++;
+                        this.stopsLeft--;
                         Game.money += 1 * (1.0025 * Game.money_upgrades);
                     }
 
@@ -65,6 +76,7 @@ public class Unit extends Actor {
 
     Unit() {
         super(new Texture("unit1.png"));
+        stopsLeft = 25;
     }
 
     Unit(UnitOrder order) {

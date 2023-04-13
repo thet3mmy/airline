@@ -33,7 +33,7 @@ public class Game extends ApplicationAdapter {
 		circleTex = new Texture("circle.png");
 		backdrop = new Texture("bg.png");
 
-		money = 32;
+		money = 3000002;
 		money_upgrades = 1;
 		speed_upgrades = 1;
 		simulation_enabled = false;
@@ -51,12 +51,20 @@ public class Game extends ApplicationAdapter {
 		InputController.handleControls();
 
 		tick++;
+
+		if(Unit.orders.size() <= 1) {
+			Game.simulation_enabled = false;
+		}
+
 		batch.begin();
 
 		batch.draw(backdrop, 0, 0);
 
-		for(Actor a: toDraw) {
+		LinkedList<Unit> c_toDraw = (LinkedList<Unit>) toDraw.clone();
+
+		for(Unit a: c_toDraw) {
 			a.sprite.draw(batch);
+			UIRender.font.draw(batch, String.valueOf(a.stopsLeft), a.sprite.getX(), a.sprite.getY());
 			a.think();
 		}
 
