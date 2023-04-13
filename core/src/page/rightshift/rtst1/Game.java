@@ -33,7 +33,7 @@ public class Game extends ApplicationAdapter {
 		circleTex = new Texture("circle.png");
 		backdrop = new Texture("bg.png");
 
-		money = 3000002;
+		money = 32;
 		money_upgrades = 1;
 		speed_upgrades = 1;
 		simulation_enabled = false;
